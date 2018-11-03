@@ -8,14 +8,20 @@ output: github_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 ```
-```{r}
+
+### Problem 1
+
+```{r data_import}
 #Download and extract source data from zip archive.
 download.file(url = "http://p8105.com/data/hw5_data.zip", 
               destfile =  "hw5_data.zip")
-dir.create("data") #create a data directory.
-unzip(zipfile = "hw5_data.zip", exdir = "data") #extract the files into this new directory
-study_data <-
-  list.files("./data/data/",pattern = "^.*\\.csv$", full.names = T) %>% 
-   map_df(., read_csv)
+unzip(zipfile = "hw5_data.zip", exdir = "data", junkpaths = T) #extract the files into this new directory
+study_csvs <- list.files(path = "data",pattern = "^.[A-z]*.*\\.csv$", full.names = T) #grab just the real CSVs beginning with a letter and ending with a .csv, avoiding unimportant files in the archive.
+study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
+   map_df(.f = read_csv)
 ```
 
+Instructions: Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
+Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
+
+### Problem 2
