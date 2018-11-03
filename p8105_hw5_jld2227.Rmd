@@ -76,3 +76,12 @@ plotly::ggplotly(p = spaghetti_con_exp)  #it works absolutely fine in plotly.
 ```
 
 ### Problem 2
+
+Now, we'll grab homicide data for analysis.
+```{r}
+homicide_data <- read_csv("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv") %>% #read in data.
+  mutate( victim_first = iconv(x = victim_first, from = "latin1", to =  "ASCII",sub = ""),
+          victim_last = iconv(x = victim_last, from = "latin1", to =  "ASCII",sub = "")) #This removes nonstandard characters that cause problems with skimr.
+
+```
+
