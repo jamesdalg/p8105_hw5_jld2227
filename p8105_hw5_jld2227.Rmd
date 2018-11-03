@@ -7,6 +7,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+#setMKLthreads(4)
 ```
 
 ### Problem 1
@@ -70,7 +71,8 @@ spaghetti_con_exp <- ggplot(data = study_data,
                             aes(x = week, y = measurement, color = arm, group = subject_id)) +
   geom_line()
 #spaghetti_con_exp For some reason, base ggplot won't piece this together correctly.
-plotly::ggplotly(spaghetti_con_exp)
+plotly::ggplotly(p = spaghetti_con_exp)  #it works absolutely fine in plotly.
+
 ```
 
 ### Problem 2
