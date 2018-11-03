@@ -81,7 +81,23 @@ Now, we'll grab homicide data for analysis.
 ```{r}
 homicide_data <- read_csv("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv") %>% #read in data.
   mutate( victim_first = iconv(x = victim_first, from = "latin1", to =  "ASCII",sub = ""),
-          victim_last = iconv(x = victim_last, from = "latin1", to =  "ASCII",sub = "")) #This removes nonstandard characters that cause problems with skimr.
-
+          victim_last = iconv(x = victim_last, from = "latin1", to =  "ASCII",sub = ""),
+          #This removes nonstandard characters that cause problems with skimr.
+          city_state = str_c(city,", ",state), #create city state variable by string concatenation.
+          unresolved = disposition %in% c("Closed without arrest","Open/No arrest"),
+          #creates a variable for whether the case was  unresolved.
+          resolved = disposition %in% c("Closed by arrest")) 
+#creates a variable for whether the case was resolved, to double check the numbers.
+#Included the resolved cases as a separate variable to clearly show that the resolved and unresolved cases sum to the total (and hence the calculations make sense).
+homicide_data %>% 
+  group_by(city_state) %>%  
+  summarise(total = n(), #get the total number of cases by city_state combination.
+            unresolved_cases = sum(unresolved), 
+        #Gets the unresolved cases of each city state combination.
+            resolved_cases = sum(resolved)
+        #Gets the resolved cases of each city state combination.
+            ) %>% select(city_state, unresolved_cases, resolved_cases, total) %>% 
+  knitr::kable()
+#The numbers add up: unresolved + resolved = total.
 ```
 
