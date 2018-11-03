@@ -1,0 +1,21 @@
+---
+title: "Homework 5"
+author: "James Dalgleish"
+date: "November 2, 2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+```{r}
+#Download and extract source data from zip archive.
+download.file(url = "http://p8105.com/data/hw5_data.zip", 
+              destfile =  "hw5_data.zip")
+dir.create("data") #create a data directory.
+unzip(zipfile = "hw5_data.zip", exdir = "data") #extract the files into this new directory
+study_data <-
+  list.files("./data/data/",pattern = "^.*\\.csv$", full.names = T) %>% 
+   map_df(., read_csv)
+```
+
