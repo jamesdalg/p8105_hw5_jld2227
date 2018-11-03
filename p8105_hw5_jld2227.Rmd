@@ -17,8 +17,35 @@ download.file(url = "http://p8105.com/data/hw5_data.zip",
               destfile =  "hw5_data.zip")
 unzip(zipfile = "hw5_data.zip", exdir = "data", junkpaths = T) #extract the files into this new directory
 study_csvs <- list.files(path = "data",pattern = "^.[A-z]*.*\\.csv$", full.names = T) #grab just the real CSVs beginning with a letter and ending with a .csv, avoiding unimportant files in the archive.
+
+#delete the extra csvs and ._data in the __MACOSX folder of the archive.
+#a setdiff will include the . and .., which we can't remove, so specific commands are needed.
+if ( Sys.info()['sysname'] == "Windows") {
+extra_files <- list.files('data',all.files = T, "^[.].*\\.csv$", full.names = T)
+file.remove(extra_files)
+file.remove("./data/._data")
+
+}
+read_w_fn <- function(csv, basename = T) {
+  browser()
+  if (basename) {
+    
+  df <- read_csv(csv) %>% 
+    mutate(source_file = 
+             rep(basename(csv),
+                 nrow(csv))
+           )
+  } else {
+    df <- read_csv(csv) %>% 
+    mutate(source_file = rep(csv,
+                 nrow(csv))
+           )
+  }
+}
 study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
-   map_df(.f = read_csv)
+   map_df(.f = read_w_fn) %>% 
+  gather(key = "week", value = "measurement")
+
 ```
 
 Instructions: Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
