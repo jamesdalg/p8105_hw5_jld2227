@@ -57,7 +57,7 @@ study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
          arm = str_replace(basename(source_file),"_.*$",""), #creates a categorical arm variable by removing the text after con or exp.
          subject_id = (str_extract( #extracts the subject number from the filename.
            basename(source_file), #removes the directory information from the filename.
-           "(\\d)+") %>% #specifies the numbers within the filename as the string to be extracted.
+          pattern =  "(\\d)+") %>% #specifies the numbers within the filename as the string to be extracted.
                          as.numeric()) #converts subject ID to numeric
          ) 
 
@@ -66,7 +66,11 @@ study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
 Instructions: Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
 Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
 ```{r spaghetti_plot}
-spaghetti_con_exp <- 
+spaghetti_con_exp <- ggplot(data = study_data, 
+                            aes(x = week, y = measurement, color = arm, group = subject_id)) +
+  geom_line()
+#spaghetti_con_exp For some reason, base ggplot won't piece this together correctly.
+plotly::ggplotly(spaghetti_con_exp)
 ```
 
 ### Problem 2
