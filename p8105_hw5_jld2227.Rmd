@@ -70,8 +70,8 @@ Make a spaghetti plot showing observations on each subject over time, and commen
 spaghetti_con_exp <- ggplot(data = study_data, 
                             aes(x = week, y = measurement, color = arm, group = subject_id)) +
   geom_line()
-#spaghetti_con_exp For some reason, base ggplot won't piece this together correctly.
-plotly::ggplotly(p = spaghetti_con_exp)  #it works absolutely fine in plotly.
+spaghetti_con_exp #For some reason, base ggplot won't piece this together correctly.
+#plotly::ggplotly(p = spaghetti_con_exp)  #it works absolutely fine in plotly.
 
 ```
 
@@ -97,7 +97,8 @@ homicide_data %>%
             resolved_cases = sum(resolved)
         #Gets the resolved cases of each city state combination.
             ) %>% select(city_state, unresolved_cases, resolved_cases, total) %>% 
-  knitr::kable()
+  #rearranges the columns
+  knitr::kable(col.names = c("City, State", "Unresolved Cases", "Resolved Cases", "Total Cases"), format = "markdown", padding = 10) #Displays the table in a more presentable format.
 #The numbers add up: unresolved + resolved = total.
 ```
 
