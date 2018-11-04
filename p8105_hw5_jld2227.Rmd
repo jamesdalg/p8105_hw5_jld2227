@@ -89,16 +89,45 @@ homicide_data <- read_csv("https://raw.githubusercontent.com/washingtonpost/data
           resolved = disposition %in% c("Closed by arrest")) 
 #creates a variable for whether the case was resolved, to double check the numbers.
 #Included the resolved cases as a separate variable to clearly show that the resolved and unresolved cases sum to the total (and hence the calculations make sense).
-homicide_data %>% 
+hom_summ_tbl <- homicide_data %>% 
   group_by(city_state) %>%  
   summarise(total = n(), #get the total number of cases by city_state combination.
             unresolved_cases = sum(unresolved), 
         #Gets the unresolved cases of each city state combination.
             resolved_cases = sum(resolved)
         #Gets the resolved cases of each city state combination.
-            ) %>% select(city_state, unresolved_cases, resolved_cases, total) %>% 
+            ) %>% 
+  select(city_state, unresolved_cases, resolved_cases, total) 
   #rearranges the columns
+
+ hom_summ_tbl %>% 
   knitr::kable(col.names = c("City, State", "Unresolved Cases", "Resolved Cases", "Total Cases"), format = "markdown", padding = 10) #Displays the table in a more presentable format.
 #The numbers add up: unresolved + resolved = total.
+ library(magrittr)
+ balt_res <- hom_summ_tbl %>%
+   filter(city_state == "Baltimore, MD") %>% 
+   select(unresolved_cases, total) %>% 
+   rowwise() %$% 
+   prop.test(x = unresolved_cases, n = total)
+ balt_res %>% 
+   broom::tidy() %>% 
+   kable()
+ balt_est <- balt_res %>% 
+   broom::tidy() %>% 
+   pull(estimate)
+ balt_ci_l <- balt_res %>% 
+   broom::tidy() %>% 
+   pull(conf.low)
+balt_ci_h <- balt_res %>% 
+   broom::tidy() %>% 
+   pull(conf.high)
+ 
+   prop.test(hom_summ_tbl$unresolved_cases,hom_summ_tbl$total)
+   hom_summ_tbl %>%
+   rowwise() %$% 
+     map(.x = .,
+        .f = prop.test(x = unresolved_cases, n = total)
+     ) 
+   
 ```
 
