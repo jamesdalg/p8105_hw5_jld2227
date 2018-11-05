@@ -115,9 +115,9 @@ hom_summ_tbl <- homicide_data %>%
  balt_ci_est <- balt_res %>% 
    broom::tidy() %>% 
    select(estimate, conf.low, conf.high)
-
-   prop.test(hom_summ_tbl$unresolved_cases,hom_summ_tbl$total)
-   prop.test(hom_summ_tbl$unresolved_cases[1],hom_summ_tbl$total[1]) %>% broom::tidy()
+# 
+#    prop.test(hom_summ_tbl$unresolved_cases,hom_summ_tbl$total)
+#    prop.test(hom_summ_tbl$unresolved_cases[1],hom_summ_tbl$total[1]) %>% broom::tidy()
    
 
    hom_summ_tbl %$%
