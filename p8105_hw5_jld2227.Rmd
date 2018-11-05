@@ -128,7 +128,7 @@ hom_summ_tbl <- homicide_data %>%
      )
      ) %>% unnest() %>% 
      select(city_state, estimate, conf.low, conf.high)
-  est_ci_cityst %$% 
+  est_ci_cityst %>% 
  mutate(city_state = forcats::fct_reorder(.f = 
                            city_state %>% as.factor(),
                          estimate)
@@ -139,5 +139,7 @@ hom_summ_tbl <- homicide_data %>%
        )  +
   geom_point() +
   geom_errorbar() + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(title = "Estimated Proportion of Unresolved Homicides by City, State",
+         y = "Estimated proportion", x = "City, State")
 ```
