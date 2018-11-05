@@ -75,7 +75,7 @@ spaghetti_con_exp #For some reason, base ggplot won't piece this together correc
 library(plotly)
 ggplotly(p = spaghetti_con_exp)
 ```
-
+On the whole, it appears that the patients in the control group are generally lower in measurement than those in the experimental group. Subject 10 is anomalously high in the control condition.
 ### Problem 2
 
 Now, we'll grab homicide data for analysis.
