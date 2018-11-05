@@ -112,22 +112,17 @@ hom_summ_tbl <- homicide_data %>%
  balt_res %>% 
    broom::tidy() %>% 
    kable()
- balt_est <- balt_res %>% 
+ balt_ci_est <- balt_res %>% 
    broom::tidy() %>% 
-   pull(estimate)
- balt_ci_l <- balt_res %>% 
-   broom::tidy() %>% 
-   pull(conf.low)
-balt_ci_h <- balt_res %>% 
-   broom::tidy() %>% 
-   pull(conf.high)
- 
+   select(estimate, conf.low, conf.high)
+
    prop.test(hom_summ_tbl$unresolved_cases,hom_summ_tbl$total)
-   hom_summ_tbl %>%
-   rowwise() %$% 
-     map(.x = .,
-        .f = prop.test(x = unresolved_cases, n = total)
-     ) 
+   prop.test(hom_summ_tbl$unresolved_cases[1],hom_summ_tbl$total[1]) %>% broom::tidy()
    
+
+   hom_summ_tbl %$%
+     map2_dfr(.x = unresolved_cases, .y = total,
+        .f = ~(prop.test(x = .x, n = .y) %>% broom::tidy())
+     ) 
 ```
 
