@@ -120,13 +120,12 @@ hom_summ_tbl <- homicide_data %>%
 #    prop.test(hom_summ_tbl$unresolved_cases[1],hom_summ_tbl$total[1]) %>% broom::tidy()
    
 
-   hom_summ_tbl %$%
-     map2_dfr(.x = unresolved_cases, .y = total,
+   hom_summ_tbl  %>%
+     mutate(ci_est =
+              map2(.x = unresolved_cases, .y = total,
         .f = ~(prop.test(x = .x, n = .y) %>% broom::tidy())
-     ) %>% 
-   select(estimate, conf.low, conf.high) %>% bind_cols(
-     hom_summ_tbl %>% pull(city_state) %>% as.tibble()
-   )
-   #hom_summ_tbl
+     )
+     ) %>% unnest() %>% 
+     select(city_state, estimate, conf.low, conf.high)
 ```
 
