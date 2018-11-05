@@ -123,6 +123,7 @@ hom_summ_tbl <- homicide_data %>%
    hom_summ_tbl %$%
      map2_dfr(.x = unresolved_cases, .y = total,
         .f = ~(prop.test(x = .x, n = .y) %>% broom::tidy())
-     ) 
+     ) %>% 
+   select(estimate, conf.low, conf.high)
 ```
 
