@@ -124,6 +124,9 @@ hom_summ_tbl <- homicide_data %>%
      map2_dfr(.x = unresolved_cases, .y = total,
         .f = ~(prop.test(x = .x, n = .y) %>% broom::tidy())
      ) %>% 
-   select(estimate, conf.low, conf.high)
+   select(estimate, conf.low, conf.high) %>% bind_cols(
+     hom_summ_tbl %>% pull(city_state) %>% as.tibble()
+   )
+   #hom_summ_tbl
 ```
 
