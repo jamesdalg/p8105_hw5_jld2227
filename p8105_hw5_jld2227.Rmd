@@ -114,7 +114,7 @@ hom_summ_tbl <- homicide_data %>%
    prop.test(x = unresolved_cases, n = total)
  balt_res %>% 
    broom::tidy() %>% 
-   kable()
+   knitr::kable()
  balt_ci_est <- balt_res %>% 
    broom::tidy() %>% 
    select(estimate, conf.low, conf.high)
