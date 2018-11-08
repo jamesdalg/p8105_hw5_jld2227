@@ -73,11 +73,7 @@ spaghetti_con_exp <- ggplot(data = study_data,
   geom_line() + #Specifies the plot type to line.
   labs(title = "Subject Study Measurements by Week", fill = "Study Arm",
        x = "Week", y = "Measurement") #Sets appropriate labels. 
-spaghetti_facet <- spaghetti_con_exp + 
-  facet_grid(~arm) + #creates a faceted version of the orignal plot.
-  labs(title = "Subject Study Measurements by Week, in Control and Treatment") #modifies the title
-library(patchwork) #brings in the patchwork pacage, which allows plotting multiple plots in specific arrangements
-spaghetti_con_exp / spaghetti_facet #plots the output with patchwork arragement,  regular at the top, facet plot at the bottom in this case.
+spaghetti_con_exp #plots the output
 
 ```
 On the whole, it appears that the patients in the control group are generally lower in measurement than those in the experimental group. Subject 10 is anomalously high in the control condition.
