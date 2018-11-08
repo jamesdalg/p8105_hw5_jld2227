@@ -31,7 +31,7 @@ file.remove("hw5_data.zip") #deletes the zip file
 }
 ```
 Now that we have the raw data, we'll import it and convert the contents of the individual subject data into a comprehensive table in long format that is amenable to data analysis, incorporating information about the subject contained in the filename.
-```{r data_import}
+```{r data_import, message = F}
 read_w_fn <- function(csv, basename = T) { #the basename argument ensures the function is more generalizable to future problems where the full file path is desired in the output (in which case the user can set this flag to false).
   #browser()
   if (basename) {
@@ -60,6 +60,7 @@ study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
          subject_id = (str_extract( #extracts the subject number from the filename.
            basename(source_file), #removes the directory information from the filename.
           pattern =  "(\\d)+") %>% #specifies the numbers within the filename as the string to be extracted.
+            str_c(arm) %>%  #adding this to the subject stops false connections that can alterate between control and treatment in geom_line.
                          as.factor) #converts subject ID to numeric
          ) %>% 
   arrange(subject_id,arm,week)
@@ -69,12 +70,17 @@ study_data <- study_csvs   %>%  #Creates a dataframe from the columns.
 
 ```{r spaghetti_plot}
 spaghetti_con_exp <- ggplot(data = study_data, 
-                            aes(x = week, y = measurement, color = arm, group = subject_id)) +
+                            aes(x = week, y = measurement, 
+                                color = arm, group = subject_id)) +
   geom_line(aes(group = subject_id)) + 
-  labs(title = "Subject Study measurements by Week", fill = "Study Arm",
-       x = "Week", y = "Measurement")
-spaghetti_con_exp #For some reason, base ggplot won't piece this together correctly.
-#plotly::ggplotly(p = spaghetti_con_exp)  #it works absolutely fine in plotly.
+  labs(title = "Subject Study Measurements by Week", fill = "Study Arm",
+       x = "Week", y = "Measurement") 
+spaghetti_facet <- spaghetti_con_exp + 
+  facet_grid(~arm) + #creates a faceted version
+  labs(title = "Subject Study Measurements by Week, in Control and Treatment")
+library(patchwork)
+spaghetti_con_exp / spaghetti_facet #plots the output
+
 ```
 On the whole, it appears that the patients in the control group are generally lower in measurement than those in the experimental group. Subject 10 is anomalously high in the control condition.
 
